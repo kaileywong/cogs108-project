@@ -1,4 +1,4 @@
-timestamp,price,null,cpu_name
+timestamp,price,null,model
 1604908800000,165.0,,Ryzen 7 1700X
 1605513600000,194.96,,Ryzen 7 1700X
 1606118400000,194.96,,Ryzen 7 1700X

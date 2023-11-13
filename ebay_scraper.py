@@ -26,7 +26,7 @@ def get_gpu_data(gpu_model: str, price_low: int, price_high: int):
     """Get historical price/sell volume data for a particular GPU
 
     Args:
-        gpu_model (str): GPU model to search for e.g. GTX 1080, RTX 3070, etc.
+        gpu_model (str): GPU model to search for e.g. Geforce GTX 1080, Geforce RTX 3070, etc.
         price_low (int): Minimum price to search for. e.g. remove all listings for GPU's at $0.01
         price_high (int): Maximum price to search for. e.g. remove all listings for GPU's at $999999999
 
@@ -72,7 +72,7 @@ def get_cpu_data(cpu_model: str, price_low: int, price_high: int):
 
 
 
-nvidia_gpu_list = [('gtx 960', 80, 300), ('gtx 970', 80, 300), ('gtx 980', 130, 320), ('gtx 1060', 100, 300), ('gtx 1070', 120, 400), ('gtx 1080', 150, 700), ('gtx titan', 200, 1400), ('rtx 2060', 150, 800), ('rtx 2070', 150, 900), ('rtx 2080', 200, 1200), ('rtx titan', 300, 2200), ('rtx 3060', 200, 1200), ('rtx 3070', 250, 1600), ('rtx 3080', 400, 2300), ('rtx 3090', 500, 3200), ('rtx 4060', 300, 500), ('rtx 4070', 400, 1000), ('rtx 4080', 600, 1600), ('rtx 4090', 700, 3000)]
+nvidia_gpu_list = [('Geforce GTX 960', 80, 300), ('Geforce GTX 970', 80, 300), ('Geforce GTX 980', 130, 320), ('Geforce GTX 1060', 100, 300), ('Geforce GTX 1070', 120, 400), ('Geforce GTX 1080', 150, 700), ('Geforce GTX titan', 200, 1400), ('Geforce RTX 2060', 150, 800), ('Geforce RTX 2070', 150, 900), ('Geforce RTX 2080', 200, 1200), ('Geforce RTX titan', 300, 2200), ('Geforce RTX 3060', 200, 1200), ('Geforce RTX 3070', 250, 1600), ('Geforce RTX 3080', 400, 2300), ('Geforce RTX 3090', 500, 3200), ('Geforce RTX 4060', 300, 500), ('Geforce RTX 4070', 400, 1000), ('Geforce RTX 4080', 600, 1600), ('Geforce RTX 4090', 700, 3000)]
 
 amd_gpus = [('Radeon R9 290', 100, 1500), ('Radeon R9 290X', 100, 1500), ('Radeon RX 470', 100, 1500), ('Radeon RX 480', 100, 1500), ('Radeon RX 570', 100, 1500), ('Radeon RX 580', 100, 1500),
             ('Radeon RX 6700 XT', 100, 1500), ('Radeon RX 6800 XT', 100, 2500), ('Radeon RX 6900 XT', 100, 2500), ('Radeon 5600 XT', 100, 2500), ('Radeon RX 6600 XT', 100, 2500),
@@ -80,8 +80,8 @@ amd_gpus = [('Radeon R9 290', 100, 1500), ('Radeon R9 290X', 100, 1500), ('Radeo
             ('Radeon RX 6950 XT', 100, 2500), ('Radeon RX 6750 XT', 100, 2500), ('Radeon RX 6650 XT', 100, 2500), ('Radeon RX 6500 XT', 100, 2500), ('Radeon RX 5500 XT', 100, 2500),
             ('Radeon RX 5700 XT', 100, 2500)]
 
-gpu_price_df = pd.DataFrame(columns=['timestamp', 'price', 'null', 'gpu_name'])
-gpu_volum_df = pd.DataFrame(columns=['timestamp', 'volume', 'null', 'gpu_name'])
+gpu_price_df = pd.DataFrame(columns=['timestamp', 'price', 'null', 'model'])
+gpu_volum_df = pd.DataFrame(columns=['timestamp', 'volume', 'null', 'model'])
 
 gpu_list = nvidia_gpu_list + amd_gpus
 
@@ -91,11 +91,11 @@ for gpu in gpu_list:
     if prices == None:
         continue
     tmp_df = pd.DataFrame(prices, columns=['timestamp', 'price', 'null'])
-    tmp_df['gpu_name'] = len(tmp_df) * [gpu[0]]
+    tmp_df['model'] = len(tmp_df) * [gpu[0]]
     gpu_price_df = gpu_price_df.merge(tmp_df, how='outer')
 
     tmp_df2 = pd.DataFrame(vol, columns=['timestamp', 'volume', 'null'])
-    tmp_df2['gpu_name'] = len(tmp_df2) * [gpu[0]]
+    tmp_df2['model'] = len(tmp_df2) * [gpu[0]]
     gpu_volum_df = gpu_volum_df.merge(tmp_df2, how='outer')
 
 gpu_price_df.to_csv('./gpu_prices.csv', index=False)
@@ -127,8 +127,8 @@ intel_cpu = [('Core i5-4430S',1,1800),('Core i5-4570R',10,1800),('Core i5-4570S'
 
 
 
-cpu_price_df = pd.DataFrame(columns=['timestamp', 'price', 'null', 'cpu_name'])
-cpu_volum_df = pd.DataFrame(columns=['timestamp', 'volume', 'null', 'cpu_name'])
+cpu_price_df = pd.DataFrame(columns=['timestamp', 'price', 'null', 'model'])
+cpu_volum_df = pd.DataFrame(columns=['timestamp', 'volume', 'null', 'model'])
 
 cpu_list = amd_cpus + intel_cpu
 
@@ -139,11 +139,11 @@ for cpu in cpu_list:
         print(f'{cpu} skipped')
         continue
     tmp_df = pd.DataFrame(prices, columns=['timestamp', 'price', 'null'])
-    tmp_df['cpu_name'] = len(tmp_df) * [cpu[0]]
+    tmp_df['model'] = len(tmp_df) * [cpu[0]]
     cpu_price_df = cpu_price_df.merge(tmp_df, how='outer')
 
     tmp_df2 = pd.DataFrame(vol, columns=['timestamp', 'volume', 'null'])
-    tmp_df2['cpu_name'] = len(tmp_df2) * [cpu[0]]
+    tmp_df2['model'] = len(tmp_df2) * [cpu[0]]
     cpu_volum_df = cpu_volum_df.merge(tmp_df2, how='outer')
 
 cpu_price_df.to_csv('./cpu_prices.csv', index=False)
